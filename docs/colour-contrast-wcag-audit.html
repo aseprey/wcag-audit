@@ -195,6 +195,108 @@
     border-color: var(--accent);
   }
 
+  /* ── Cite button ── */
+  .cite-btn {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 12px;
+    margin-left: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .cite-btn:hover, .cite-btn:focus-visible {
+    color: #d9a68e;
+    border-color: var(--accent);
+  }
+  .cite-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    padding: 24px;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .modal-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .modal-close {
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .modal-close:hover, .modal-close:focus-visible { color: var(--text); }
+  .modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .modal pre {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-mid);
+  }
+  .modal-copy {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .modal-copy:hover, .modal-copy:focus-visible {
+    color: #d9a68e;
+    border-color: var(--accent);
+  }
+  .modal-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
   /* ── Article body ── */
   article {
     margin-top: 32px;
@@ -453,7 +555,27 @@
   <p class="byline">Thom&nbsp;Vaughan&nbsp;&amp;&nbsp;Pedro&nbsp;Ortiz&nbsp;Suarez</p>
   <p class="date">February 2026</p>
   <a href="./" class="dash-link">Interactive dashboard &rarr;</a>
+  <button class="cite-btn" id="cite-open" aria-haspopup="dialog">Show BibTeX Citation</button>
 </header>
+
+<div class="modal-overlay" id="cite-modal" role="dialog" aria-modal="true" aria-label="BibTeX Citation">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">BibTeX</span>
+      <button class="modal-close" id="cite-close" aria-label="Close">&times;</button>
+    </div>
+    <pre><code>@misc{vaughan2026colourcontrastwebwcag,
+      title={Colour Contrast on the Web: A WCAG 2.1 Level AA Compliance Audit of Common Crawl's Top 500 Domains},
+      author={Thom Vaughan and Pedro Ortiz Suarez},
+      year={2026},
+      eprint={2602.24067},
+      archivePrefix={arXiv},
+      primaryClass={cs.IR},
+      url={https://arxiv.org/abs/2602.24067},
+}</code></pre>
+    <button class="modal-copy" id="cite-copy">Copy</button>
+  </div>
+</div>
 
 <article class="prose">
 
@@ -756,6 +878,44 @@
   <p>Data: <a href="https://commoncrawl.org" rel="noopener noreferrer" target="_blank">Common Crawl</a> <a href="https://data.commoncrawl.org/crawl-data/CC-MAIN-2026-08/index.html" rel="noopener noreferrer" target="_blank">CC-MAIN-2026-08</a> &middot; 428 domains with captures &middot; 240 with extractable colour pairings &middot; 4,327 unique pairings</p>
   <p><a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener noreferrer license" target="_blank"><abbr title="Creative Commons Zero">CC0</abbr>&nbsp;1.0</a> &mdash; This work is dedicated to the public domain.</p>
 </footer>
+
+<script>
+(function () {
+  "use strict";
+  var overlay = document.getElementById("cite-modal");
+  var openBtn = document.getElementById("cite-open");
+  var closeBtn = document.getElementById("cite-close");
+  var copyBtn = document.getElementById("cite-copy");
+  var bibtex = overlay.querySelector("pre code").textContent;
+
+  function open() {
+    overlay.classList.add("active");
+    closeBtn.focus();
+    document.body.style.overflow = "hidden";
+  }
+  function close() {
+    overlay.classList.remove("active");
+    openBtn.focus();
+    document.body.style.overflow = "";
+  }
+
+  openBtn.addEventListener("click", open);
+  closeBtn.addEventListener("click", close);
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) close();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && overlay.classList.contains("active")) close();
+  });
+
+  copyBtn.addEventListener("click", function () {
+    navigator.clipboard.writeText(bibtex).then(function () {
+      copyBtn.textContent = "Copied!";
+      setTimeout(function () { copyBtn.textContent = "Copy"; }, 1500);
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
