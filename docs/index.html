@@ -870,6 +870,23 @@
     .placeholder-img.masthead { height: 260px; }
     .placeholder-img.inline { height: 180px; }
   }
+
+  /* ── Dashboard link ── */
+  .dash-link {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .dash-link:hover, .dash-link:focus-visible {
+    color: #d9a68e;
+    border-color: var(--accent);
+  }
 </style>
 </head>
 <body>
@@ -880,6 +897,7 @@
   <p class="header-desc">Static analysis of <a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" rel="noopener noreferrer" target="_blank">colour contrast compliance</a> across 240 of the web's most-crawled domains, using only inline and embedded <abbr title="Cascading Style Sheets">CSS</abbr> from archived homepage captures. The <a href="./colour-contrast-wcag-audit.html">full paper</a> has further details, and <a href="https://github.com/thunderpoot/wcag-audit" rel="noopener noreferrer" target="_blank">the code is available on GitHub</a>.</p>
   <p class="header-desc"><strong>Data source:</strong> the <a href="https://data.commoncrawl.org/crawl-data/CC-MAIN-2026-08/index.html" rel="noopener noreferrer" target="_blank">February 2026 crawl archive (CC-MAIN-2026-08)</a> from <a href="https://commoncrawl.org" rel="noopener noreferrer" target="_blank">Common Crawl</a>.</p>
 
+  <a href="https://arxiv.org/abs/2602.24067" target="_blank" rel="noreferrer nofollow" class="dash-link">arXiv &rarr;</a>
   <button class="cite-btn" id="cite-open" aria-haspopup="dialog">Show BibTeX Citation</button>
 
   <img src="./img/masthead.webp" class="masthead" alt="Abstract visualisation of colour contrast" width="1200" height="630">
